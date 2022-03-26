@@ -28,11 +28,7 @@ class FormHelper
      */
     public static function generateInput(string $type, string $name, $value, array $attributes = []): string
     {
-        $attr = [];
-        foreach ($attributes as $k => $v) {
-            $attr[] = (is_int($k) ? $v : $k) . '="' . $v . '"';
-        }
-
+        $attr = self::prepareAttributes($attributes);
         return '<input type="' . $type . '" name="' . $name . '" value="' . $value . '" ' . implode(' ', $attr) . '>';
     }
 
@@ -42,11 +38,13 @@ class FormHelper
      * @param string $name name in 'snake_case' format
      * @param array $options see FormHelper::prepareOptions()
      * @param mixed|null $default
+     * @param array $attributes ['class'=>'selectmedium', ...]
      * @return string
      */
-    public static function generateSelect(string $name, array $options, $default = null): string
+    public static function generateSelect(string $name, array $options, $default = null, array $attributes = []): string
     {
-        $result = "<select name='" . $name . "' id='" . $name . "'>\n";
+        $attr = self::prepareAttributes($attributes);
+        $result = "<select name='" . $name . "' id='" . $name . "' " . implode(' ', $attr) . ">\n";
         $result .= self::prepareOptions($options, $default);
         $result .= "</select>";
         return $result;
@@ -88,6 +86,19 @@ class FormHelper
             }
         }
         return $out;
+    }
+
+    /**
+     * @param array $attributes
+     * @return array
+     */
+    public static function prepareAttributes(array $attributes): array
+    {
+        $attr = [];
+        foreach ($attributes as $k => $v) {
+            $attr[] = (is_int($k) ? $v : $k) . '="' . $v . '"';
+        }
+        return $attr;
     }
 
 }

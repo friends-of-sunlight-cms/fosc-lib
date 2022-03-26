@@ -132,7 +132,13 @@ class ConfigAction extends BaseConfigAction
         );
     }
 
-    protected function generateSelect(string $name, array $options, $default): string
+    /**
+     * @param string $name
+     * @param array $options see FormHelper::prepareOptions()
+     * @param mixed|null $default
+     * @return string
+     */
+    protected function generateSelect(string $name, array $options, $default = null): string
     {
         return FormHelper::generateSelect(
             'config[' . $name . ']',

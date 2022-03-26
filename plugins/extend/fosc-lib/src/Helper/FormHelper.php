@@ -12,7 +12,7 @@ class FormHelper
      * @param array $attributes
      * @return string
      */
-    static public function generateCheckbox(string $name, array $attributes = []): string
+    public static function generateCheckbox(string $name, array $attributes = []): string
     {
         return self::generateInput('checkbox', $name, 1, $attributes);
     }
@@ -26,7 +26,7 @@ class FormHelper
      * @param array $attributes
      * @return string
      */
-    static public function generateInput(string $type, string $name, $value, array $attributes = []): string
+    public static function generateInput(string $type, string $name, $value, array $attributes = []): string
     {
         $attr = [];
         foreach ($attributes as $k => $v) {
@@ -40,18 +40,54 @@ class FormHelper
      * Generate HTML select
      *
      * @param string $name name in 'snake_case' format
-     * @param array $options ['caption 1' => 'value 1', 'caption 2' => 'value 2', ...]
-     * @param mixed $default
+     * @param array $options see FormHelper::prepareOptions()
+     * @param mixed|null $default
      * @return string
      */
-    static public function generateSelect(string $name, array $options, $default): string
+    public static function generateSelect(string $name, array $options, $default = null): string
     {
-        $result = "<select name='" . $name . "'>";
-        foreach ($options as $key => $value) {
-            $result .= "<option value='" . $value . "'" . ($default == $value ? " selected" : "") . ">" . $key . "</option>";
-        }
+        $result = "<select name='" . $name . "' id='" . $name . "'>\n";
+        $result .= self::prepareOptions($options, $default);
         $result .= "</select>";
         return $result;
+    }
+
+    /**
+     * Generate options for select
+     *
+     * Items format
+     * ============
+     * it is possible to use a nested array to create an optgroup
+     *
+     * [
+     * 'Optgroup1' => [
+     *      'Value1' => 'Caption 1',
+     *      'Value2' => 'Caption 2',
+     * ],
+     * 'Optgroup2' => [
+     *      'Value3' => 'Caption 3',
+     *      'Value4' => 'Caption 4',
+     * ],
+     *      'Value5' => 'Caption 5',
+     *      'Value6' => 'Caption 6',
+     * ]
+     *
+     * @param array $items
+     * @param mixed|null $default
+     * @return string
+     */
+    public static function prepareOptions(array $items, $default = null): string
+    {
+        $out = '';
+        foreach ($items as $key => $item) {
+            if (is_array($item)) {
+                $item = self::prepareOptions($item, $default);
+                $out .= "<optgroup label='" . $key . "'>\n" . $item . "</optgroup>\n";
+            } else {
+                $out .= "<option value='" . $key . "'" . ($key == $default ? " selected" : "") . ">" . $item . "</option>\n";
+            }
+        }
+        return $out;
     }
 
 }

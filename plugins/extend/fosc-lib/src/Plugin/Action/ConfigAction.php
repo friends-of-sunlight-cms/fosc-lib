@@ -1,12 +1,12 @@
 <?php
 
-namespace Fosc;
+namespace Fosc\Plugin\Action;
 
 use Fosc\Helper\FormHelper;
-use Sunlight\Plugin\Action\ConfigAction;
+use Sunlight\Plugin\Action\ConfigAction as BaseConfigAction;
 use Sunlight\Util\Form;
 
-class FoscConfigAction extends ConfigAction
+class ConfigAction extends BaseConfigAction
 {
     /**
      * @param string $name snake_case name
@@ -20,7 +20,7 @@ class FoscConfigAction extends ConfigAction
      * @param string $input allows field definition or use of shorthand for field autogeneration ('%[type]' or '%checkbox')
      * @param array $inputAttributes attributes ex. ['class'=>'smallinput', ...]
      * @param string|null $type `text` and `checkbox` are handled automatically when using shorthand,
-     *                          `null` is for custom mapping using 'ConfigAction::mapSubmittedValue()'
+     *                          `null` is for custom mapping using 'Configuration::mapSubmittedValue()'
      * @return array
      */
     protected function generateField(string $name, string $label, string $input, array $inputAttributes = [], string $type = null): array

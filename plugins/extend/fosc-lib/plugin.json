@@ -3,7 +3,9 @@
     "name": "FoSC Utils Library",
     "description": "Library containing auxiliary development tools for Sunlight CMS 8 plugins.",
     "version": "1.0.0",
-    "api": "^8.0",
+    "environment": {
+        "system": "^8.0"
+    },
     "url": "https://jdanek.eu",
     "class": "FoscLibPlugin",
     "autoload": {

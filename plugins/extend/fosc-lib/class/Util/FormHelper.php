@@ -1,31 +1,15 @@
 <?php
 
-namespace Fosc\Helper;
+namespace Fosc\Util;
 
 class FormHelper
 {
 
-    /**
-     * Generate HTML checkbox input
-     *
-     * @param string $name
-     * @param array $attributes
-     * @return string
-     */
     public static function generateCheckbox(string $name, array $attributes = []): string
     {
         return self::generateInput('checkbox', $name, 1, $attributes);
     }
 
-    /**
-     * Generate HTML input
-     *
-     * @param string $type
-     * @param string $name
-     * @param string|int $value
-     * @param array $attributes
-     * @return string
-     */
     public static function generateInput(string $type, string $name, $value, array $attributes = []): string
     {
         $attr = self::prepareAttributes($attributes);
@@ -36,7 +20,7 @@ class FormHelper
      * Generate HTML select
      *
      * @param string $name name in 'snake_case' format
-     * @param array $options see FormHelper::prepareOptions()
+     * @param array $options {@see FormHelper::prepareOptions()}
      * @param mixed|null $default
      * @param array $attributes ['class'=>'selectmedium', ...]
      * @return string
@@ -44,9 +28,9 @@ class FormHelper
     public static function generateSelect(string $name, array $options, $default = null, array $attributes = []): string
     {
         $attr = self::prepareAttributes($attributes);
-        $result = "<select name='" . $name . "' id='" . $name . "' " . implode(' ', $attr) . ">\n";
+        $result = '<select name="' . $name . '" id="' . $name . '" ' . implode(' ', $attr) . ">\n";
         $result .= self::prepareOptions($options, $default);
-        $result .= "</select>";
+        $result .= '</select>';
         return $result;
     }
 
@@ -76,22 +60,18 @@ class FormHelper
      */
     public static function prepareOptions(array $items, $default = null): string
     {
-        $out = '';
+        $output = '';
         foreach ($items as $key => $item) {
             if (is_array($item)) {
                 $item = self::prepareOptions($item, $default);
-                $out .= "<optgroup label='" . $key . "'>\n" . $item . "</optgroup>\n";
+                $output .= '<optgroup label="' . $key . "\">\n" . $item . "</optgroup>\n";
             } else {
-                $out .= "<option value='" . $key . "'" . ($key == $default ? " selected" : "") . ">" . $item . "</option>\n";
+                $output .= '<option value="' . $key . '"' . ($key == $default ? 'class="selected-option" selected' : '') . '>' . $item . "</option>\n";
             }
         }
-        return $out;
+        return $output;
     }
 
-    /**
-     * @param array $attributes
-     * @return array
-     */
     public static function prepareAttributes(array $attributes): array
     {
         $attr = [];

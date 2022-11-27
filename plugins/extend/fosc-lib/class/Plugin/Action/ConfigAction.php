@@ -2,7 +2,7 @@
 
 namespace Fosc\Plugin\Action;
 
-use Fosc\Helper\FormHelper;
+use Fosc\Util\FormHelper;
 use Sunlight\Plugin\Action\ConfigAction as BaseConfigAction;
 use Sunlight\Util\Form;
 
@@ -23,7 +23,13 @@ class ConfigAction extends BaseConfigAction
      *                          `null` is for custom mapping using 'Configuration::mapSubmittedValue()'
      * @return array
      */
-    protected function generateField(string $name, string $label, string $input, array $inputAttributes = [], string $type = null): array
+    protected function generateField(
+        string $name,
+        string $label,
+        string $input,
+        array $inputAttributes = [],
+        string $type = null
+    ): array
     {
         // lang shorthand
         if ($label[0] === '%') {
@@ -36,7 +42,9 @@ class ConfigAction extends BaseConfigAction
                     $label = _lang(mb_substr($label, (mb_strlen($modifier) + 1)) . '.' . $name);
                     break;
                 default:
-                    throw new \InvalidArgumentException("Invalid modifier `%" . $modifier . "`! Available modifiers: `%p:` for prefix automatically followed by field name, `%k:` for translation key.");
+                    throw new \InvalidArgumentException(
+                        "Invalid modifier `%" . $modifier . "`! Available modifiers: `%p:` for prefix automatically followed by field name, `%k:` for translation key."
+                    );
             }
         }
 
@@ -92,7 +100,12 @@ class ConfigAction extends BaseConfigAction
      * @param array $inputAttributes field attributes valid for all
      * @return array
      */
-    protected function generateFields(array $names, string $langPrefix, string $input, array $inputAttributes = []): array
+    protected function generateFields(
+        array $names,
+        string $langPrefix,
+        string $input,
+        array $inputAttributes = []
+    ): array
     {
         $fields = [];
         foreach ($names as $name) {
@@ -134,7 +147,7 @@ class ConfigAction extends BaseConfigAction
 
     /**
      * @param string $name
-     * @param array $options see FormHelper::prepareOptions()
+     * @param array $options see Form::prepareOptions()
      * @param mixed|null $default
      * @return string
      */

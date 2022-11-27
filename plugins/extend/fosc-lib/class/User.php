@@ -6,11 +6,6 @@ use Sunlight\User as BaseUser;
 
 class User extends BaseUser
 {
-
-    /**
-     * @param array $privileges
-     * @return bool
-     */
     public static function hasAllPrivileges(array $privileges): bool
     {
         $result = null;
@@ -24,10 +19,6 @@ class User extends BaseUser
         return $result ?? false;
     }
 
-    /**
-     * @param array $privileges
-     * @return bool
-     */
     public static function hasAnyPrivileges(array $privileges): bool
     {
         $result = false;

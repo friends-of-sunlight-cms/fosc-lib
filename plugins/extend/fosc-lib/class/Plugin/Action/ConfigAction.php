@@ -17,8 +17,9 @@ class ConfigAction extends BaseConfigAction
      * `%p:` for prefix automatically followed by field name
      * `%k:` for translation key
      *
-     * @param string $input allows field definition or use of shorthand for field autogeneration ('%[type]' or '%checkbox')
-     * @param array $inputAttributes attributes ex. ['class'=>'smallinput', ...]
+     * @param string $input allows field definition or use of shorthand for field auto-generation ('%[type]' or '%checkbox')
+     * @param array|null $inputAttributes attributes ex. ['class'=>'smallinput', ...]
+     *                                    and the 'select_options' and 'select_default' keys can be used for the 'select' field
      * @param string|null $type `text` and `checkbox` are handled automatically when using shorthand,
      *                          `null` is for custom mapping using 'Configuration::mapSubmittedValue()'
      * @return array
@@ -27,7 +28,7 @@ class ConfigAction extends BaseConfigAction
         string $name,
         string $label,
         string $input,
-        array $inputAttributes = [],
+        ?array $inputAttributes = null,
         string $type = null
     ): array
     {
@@ -65,12 +66,18 @@ class ConfigAction extends BaseConfigAction
                 case 'time':
                 case 'url':
                 case 'week':
-                    $input = $this->generateInput($short, $name, $inputAttributes);
+                    $input = $this->generateInput($short, $name, $inputAttributes ?? []);
                     $type = 'text';
                     break;
                 case 'checkbox':
-                    $input = $this->generateCheckbox($name, $inputAttributes);
+                    $input = $this->generateCheckbox($name, $inputAttributes ?? []);
                     $type = 'checkbox';
+                    break;
+                case'select':
+                    $_options = $inputAttributes['select_options'] ?? [];
+                    $_default = $inputAttributes['select_default'] ?? null;
+                    unset($inputAttributes['select_options'], $inputAttributes['select_default']);
+                    $input = $this->generateSelect($name, $_options, $_default, $inputAttributes);
                     break;
                 default:
                     throw new \InvalidArgumentException("Invalid shorthand '" . $short . "'.");
@@ -97,66 +104,54 @@ class ConfigAction extends BaseConfigAction
      * @param array $names
      * @param string $langPrefix will be associated with the field name '$langPrefix.$name'
      * @param string $input field type valid for all supports shorthand 'FoscConfigAction::generateField()'
-     * @param array $inputAttributes field attributes valid for all
+     * @param array|null $inputAttributes field attributes valid for all
      * @return array
      */
     protected function generateFields(
-        array $names,
+        array  $names,
         string $langPrefix,
         string $input,
-        array $inputAttributes = []
+        ?array $inputAttributes = null
     ): array
     {
         $fields = [];
         foreach ($names as $name) {
             $lang = $langPrefix . '.' . $name;
-            $fields += $this->generateField($name, _lang($lang), $input, $inputAttributes);
+            $fields += $this->generateField($name, _lang($lang), $input, $inputAttributes ?? []);
         }
         return $fields;
     }
 
-    /**
-     * @param string $name
-     * @param array $attributes
-     * @return string
-     */
-    protected function generateCheckbox(string $name, array $attributes = []): string
+    protected function generateCheckbox(string $name, ?array $attributes = null): string
     {
         $attributes[] = Form::activateCheckbox($this->plugin->getConfig()->offsetGet($name));
         return FormHelper::generateCheckbox(
             'config[' . $name . ']',
-            $attributes
+            $attributes ?? []
         );
     }
 
-    /**
-     * @param string $type
-     * @param string $name
-     * @param array $attributes
-     * @return string
-     */
-    protected function generateInput(string $type, string $name, array $attributes = []): string
+    protected function generateInput(string $type, string $name, ?array $attributes = null): string
     {
         return FormHelper::generateInput(
             $type,
             'config[' . $name . ']',
             $this->plugin->getConfig()->offsetGet($name),
-            $attributes
+            $attributes ?? []
         );
     }
 
     /**
-     * @param string $name
      * @param array $options see Form::prepareOptions()
-     * @param mixed|null $default
-     * @return string
+     * @param mixed|null $default if null use plugin config default
      */
-    protected function generateSelect(string $name, array $options, $default = null): string
+    protected function generateSelect(string $name, array $options, $default = null, array $attributes = []): string
     {
         return FormHelper::generateSelect(
             'config[' . $name . ']',
             $options,
-            $default
+            $default ?? $this->plugin->getConfig()->offsetGet($name),
+            array_merge(['id' => _e($name)], $attributes)
         );
     }
 }

@@ -27,8 +27,11 @@ class FormHelper
      */
     public static function generateSelect(string $name, array $options, $default = null, array $attributes = []): string
     {
+        if (!isset($attributes['id'])) {
+            $attributes = array_merge(['id' => $name], $attributes);
+        }
         $attr = self::prepareAttributes($attributes);
-        $result = '<select name="' . $name . '" id="' . $name . '" ' . implode(' ', $attr) . ">\n";
+        $result = '<select name="' . _e($name) . '" ' . implode(' ', $attr) . ">\n";
         $result .= self::prepareOptions($options, $default);
         $result .= '</select>';
         return $result;
@@ -64,9 +67,9 @@ class FormHelper
         foreach ($items as $key => $item) {
             if (is_array($item)) {
                 $item = self::prepareOptions($item, $default);
-                $output .= '<optgroup label="' . $key . "\">\n" . $item . "</optgroup>\n";
+                $output .= '<optgroup label="' . _e($key) . "\">\n" . _e($item) . "</optgroup>\n";
             } else {
-                $output .= '<option value="' . $key . '"' . ($key == $default ? 'class="selected-option" selected' : '') . '>' . $item . "</option>\n";
+                $output .= '<option value="' . _e($key) . '"' . ($key == $default ? 'class="selected-option" selected' : '') . '>' . _e($item) . "</option>\n";
             }
         }
         return $output;

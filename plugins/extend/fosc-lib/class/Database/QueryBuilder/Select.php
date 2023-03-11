@@ -2,8 +2,8 @@
 
 namespace Fosc\Database\QueryBuilder;
 
-use Fosc\Database\Database;
 use Fosc\Database\QueryBuilder\Interfaces\QueryInterface;
+use Sunlight\Database\Database as DB;
 
 class Select implements QueryInterface
 {
@@ -64,7 +64,7 @@ class Select implements QueryInterface
 
     public function from(string $table, ?string $alias = null): self
     {
-        $table = Database::table($table);
+        $table = DB::table($table);
         $this->from[] = ($alias === null ? $table : $table . ' AS ' . $alias);
         return $this;
     }
@@ -101,7 +101,7 @@ class Select implements QueryInterface
 
     private function addJoin(string $type, string $table, string $alias, string $onCond): void
     {
-        $table = Database::table($table);
+        $table = DB::table($table);
         $this->join[] = $type . ' JOIN ' . $table . ' ' . $alias . ' ON (' . $onCond . ')';
     }
 

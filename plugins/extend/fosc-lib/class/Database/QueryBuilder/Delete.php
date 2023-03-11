@@ -2,8 +2,8 @@
 
 namespace Fosc\Database\QueryBuilder;
 
-use Fosc\Database\Database;
 use Fosc\Database\QueryBuilder\Interfaces\QueryInterface;
+use Sunlight\Database\Database as DB;
 
 class Delete implements QueryInterface
 {
@@ -14,7 +14,7 @@ class Delete implements QueryInterface
 
     public function __construct(string $table, ?string $alias = null)
     {
-        $table = Database::table($table);
+        $table = DB::table($table);
         $this->table = ($alias === null ? $table : $table . ' AS ' . $alias);
     }
 

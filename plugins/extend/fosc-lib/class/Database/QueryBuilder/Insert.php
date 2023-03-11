@@ -2,8 +2,8 @@
 
 namespace Fosc\Database\QueryBuilder;
 
-use Fosc\Database\Database;
 use Fosc\Database\QueryBuilder\Interfaces\QueryInterface;
+use Sunlight\Database\Database as DB;
 
 class Insert implements QueryInterface
 {
@@ -14,7 +14,7 @@ class Insert implements QueryInterface
 
     public function __construct(string $table)
     {
-        $table = Database::table($table);
+        $table = DB::table($table);
         $this->table = $table;
     }
 

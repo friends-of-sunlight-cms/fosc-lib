@@ -22,6 +22,7 @@ class ConfigAction extends BaseConfigAction
      *                                    and the 'select_options' and 'select_default' keys can be used for the 'select' field
      * @param string|null $type `text` and `checkbox` are handled automatically when using shorthand,
      *                          `null` is for custom mapping using 'Configuration::mapSubmittedValue()'
+     * @param array $extra extra['before'=>'', 'after'=>''] adding extra content before or after a field
      * @return array
      */
     protected function generateField(
@@ -29,7 +30,8 @@ class ConfigAction extends BaseConfigAction
         string $label,
         string $input,
         ?array $inputAttributes = null,
-        string $type = null
+        string $type = null,
+        array  $extra = ['before' => '', 'after' => '']
     ): array
     {
         // lang shorthand
@@ -73,7 +75,7 @@ class ConfigAction extends BaseConfigAction
                     $input = $this->generateCheckbox($name, $inputAttributes ?? []);
                     $type = 'checkbox';
                     break;
-                case'select':
+                case 'select':
                     $_options = $inputAttributes['select_options'] ?? [];
                     $_default = $inputAttributes['select_default'] ?? null;
                     unset($inputAttributes['select_options'], $inputAttributes['select_default']);
@@ -87,7 +89,9 @@ class ConfigAction extends BaseConfigAction
         $result = [
             $name => [
                 'label' => $label,
-                'input' => $input
+                'input' => (!empty($extra['before']) ? $extra['before'] : '')
+                    . $input
+                    . (!empty($extra['after']) ? $extra['after'] : '')
             ]
         ];
 

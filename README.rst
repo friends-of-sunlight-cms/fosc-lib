@@ -1,7 +1,7 @@
-FoSC Utils Library
+FoSC Library
 #########
 
-Library containing auxiliary development tools for Sunlight CMS 8 plugins.
+This is a library that provides shared functionality for other Sunlight CMS 8 plugins.
 
 .. contents::
 

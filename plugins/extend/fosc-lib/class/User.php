@@ -6,6 +6,9 @@ use Sunlight\User as BaseUser;
 
 class User extends BaseUser
 {
+    /**
+     * Check if the user has all the required privileges.
+     */
     public static function hasAllPrivileges(array $privileges): bool
     {
         $result = null;
@@ -19,6 +22,9 @@ class User extends BaseUser
         return $result ?? false;
     }
 
+    /**
+     * Checks whether the user has any of the required privileges.
+     */
     public static function hasAnyPrivileges(array $privileges): bool
     {
         $result = false;

@@ -42,7 +42,6 @@ class Numerifier
      *              - single separator is consideres a decimal separator IF it is
      *                equal to the given character
      *
-     * @param string $string
      * @param string|int $floatMode see method description
      * @return int|float|bool false on failure
      */
@@ -72,7 +71,6 @@ class Numerifier
     /**
      * Analyse separators in a string
      *
-     * @param string $string
      * @return array|bool false on failure
      */
     private static function analyse(string $string)
@@ -148,8 +146,6 @@ class Numerifier
     /**
      * Decide unwanted chars and the decimal separator
      *
-     * @param string $string
-     * @param array $separators
      * @param string|int $floatMode
      * @return array unwanted pattern, decimal separator
      */
@@ -208,7 +204,6 @@ class Numerifier
     /**
      * Format a string
      *
-     * @param string $string
      * @param array $unwantedPattern array of unwanted character classes
      * @param string|null $decimalSeparator used decimal separator
      * @return int|float

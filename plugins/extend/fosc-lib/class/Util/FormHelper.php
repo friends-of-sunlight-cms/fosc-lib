@@ -2,6 +2,9 @@
 
 namespace Fosc\Util;
 
+use Sunlight\Extend;
+use Sunlight\Util\Form;
+
 class FormHelper
 {
 
@@ -32,7 +35,7 @@ class FormHelper
         }
         $attr = self::prepareAttributes($attributes);
         $result = '<select name="' . _e($name) . '" ' . implode(' ', $attr) . ">\n";
-        $result .= self::prepareOptions($options, $default);
+        $result .= self::prepareOptions($name, $options, $default);
         $result .= '</select>';
         return $result;
     }
@@ -57,19 +60,36 @@ class FormHelper
      *      'Value6' => 'Caption 6',
      * ]
      *
-     * @param array $items
-     * @param mixed|null $default
-     * @return string
+     * Data attributes format
+     * ======================
+     * ['option_value1' => ['attr-name1' => 'value1', ...], 'option_value2' => ... ]
+     *
+     * @param mixed|null $selected
      */
-    public static function prepareOptions(array $items, $default = null): string
+    public static function prepareOptions(string $selectName, array $items, $selected = null, array $dataAttributes = []): string
     {
+        Extend::call('fosclib.formhelper.prepare_options',[
+            'select_name' => $selectName,
+            'items' => &$items,
+            'selected' => &$selected,
+            'data_attributes' => &$dataAttributes,
+        ]);
+
         $output = '';
         foreach ($items as $key => $item) {
             if (is_array($item)) {
-                $item = self::prepareOptions($item, $default);
+                $item = self::prepareOptions($selectName, $item, $selected);
                 $output .= '<optgroup label="' . _e($key) . "\">\n" . _e($item) . "</optgroup>\n";
             } else {
-                $output .= '<option value="' . _e($key) . '"' . ($key == $default ? 'class="selected-option" selected' : '') . '>' . _e($item) . "</option>\n";
+                $isSelected = ($key == $selected);
+                $output .= '<option value="' . _e($key) . '"'
+                    . (!empty($dataAttributes) && isset($dataAttributes[$key])
+                        ? implode(' ', self::prepareDataAttributes($dataAttributes[$key]))
+                        : ''
+                    )
+                    . ($isSelected ? ' class="selected-option"' : '')
+                    . Form::selectOption($isSelected)
+                    . '>' . _e($item) . "</option>\n";
             }
         }
         return $output;
@@ -84,4 +104,12 @@ class FormHelper
         return $attr;
     }
 
+    public static function prepareDataAttributes(array $dataAttributes): array
+    {
+        $attr = [];
+        foreach ($dataAttributes as $key => $value) {
+            $attr[] = 'data-' . _e($key) . '="' . _e($value) . '"';
+        }
+        return $attr;
+    }
 }

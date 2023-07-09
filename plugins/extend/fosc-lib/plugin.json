@@ -7,7 +7,10 @@
     "system": "^8.0"
   },
   "authors": [
-    {"name": "Friends of Sunlight CMS", "url": "https://github.com/friends-of-sunlight-cms"}
+    {
+      "name": "Friends of Sunlight CMS",
+      "url": "https://github.com/friends-of-sunlight-cms"
+    }
   ],
   "autoload": {
     "psr-4": {

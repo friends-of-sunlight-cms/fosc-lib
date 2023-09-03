@@ -152,9 +152,10 @@ class FieldGenerator
 
     public function createCheckbox(string $name, ?array $attributes = null): string
     {
-        $attributes[] = Form::activateCheckbox($this->plugin->getConfig()->offsetGet($name));
+        $active = (isset($_POST[$name]) ? Form::loadCheckbox($name) : $this->plugin->getConfig()[$name]);
+        $attributes[] = Form::activateCheckbox($active);
         return FormHelper::generateCheckbox(
-            'config[' . $name . ']',
+            'config[' . _e($name) . ']',
             $attributes ?? []
         );
     }
@@ -163,8 +164,8 @@ class FieldGenerator
     {
         return FormHelper::generateInput(
             $type,
-            'config[' . $name . ']',
-            $this->plugin->getConfig()->offsetGet($name),
+            'config[' . _e($name) . ']',
+            Form::restorePostValue($name, $this->plugin->getConfig()[$name], false),
             $attributes ?? []
         );
     }
@@ -176,9 +177,9 @@ class FieldGenerator
     public function createSelect(string $name, array $options, $selectedOption = null, array $attributes = []): string
     {
         return FormHelper::generateSelect(
-            'config[' . $name . ']',
+            'config[' . _e($name) . ']',
             $options,
-            $selectedOption ?? $this->plugin->getConfig()->offsetGet($name),
+            $selectedOption ?? $this->plugin->getConfig()[$name],
             array_merge(['id' => _e($name)], $attributes)
         );
     }

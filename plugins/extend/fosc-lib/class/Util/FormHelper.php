@@ -15,22 +15,23 @@ class FormHelper
 
     public static function generateInput(string $type, string $name, $value, array $attributes = []): string
     {
+        $types = ['button', 'checkbox', 'color', 'date', 'datetime-local', 'email', 'file', 'hidden', 'image', 'month', 'number', 'password', 'radio', 'range', 'reset', 'search', 'submit', 'tel', 'text', 'time', 'url', 'week'];
+
         if (isset($attributes['value'])) {
             $value = $attributes['value'];
             unset($attributes['value']);
         }
+        $type = in_array($type, $types) ? $type : 'text';
         $attr = self::prepareAttributes($attributes);
-        return '<input type="' . $type . '" name="' . $name . '" value="' . $value . '" ' . implode(' ', $attr) . '>';
+        return '<input type="' . $type . '" name="' . _e($name) . '" value="' . _e($value) . '" ' . implode(' ', $attr) . '>';
     }
 
     /**
      * Generate HTML select
      *
-     * @param string $name name in 'snake_case' format
      * @param array $options {@see FormHelper::prepareOptions()}
      * @param mixed|null $selectedOption
      * @param array $attributes ['class'=>'selectmedium', ...]
-     * @return string
      */
     public static function generateSelect(string $name, array $options, $selectedOption = null, array $attributes = []): string
     {
@@ -103,7 +104,7 @@ class FormHelper
     {
         $attr = [];
         foreach ($attributes as $k => $v) {
-            $attr[] = (is_int($k) ? $v : $k) . '="' . $v . '"';
+            $attr[] = _e(is_int($k) ? $v : $k) . '="' . _e($v) . '"';
         }
         return $attr;
     }

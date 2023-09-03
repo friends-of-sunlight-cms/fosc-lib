@@ -2,13 +2,13 @@
     "$schema": "../../../system/schema/extend.json",
     "name": "FoSC Utils Library",
     "description": "Library containing auxiliary development tools for Sunlight CMS 8 plugins.",
+    "authors": [
+        {"name": "Friends of Sunlight CMS", "url": "https://github.com/friends-of-sunlight-cms"}
+    ],
     "version": "1.0.0",
     "environment": {
         "system": "^8.0"
     },
-    "authors": [
-        {"name": "Friends of Sunlight CMS", "url": "https://github.com/friends-of-sunlight-cms"}
-    ],
     "autoload": {
         "psr-4": {
             "Fosc\\": "class"
